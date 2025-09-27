@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutorial MER, UML, SQL e CRUD em Python</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: #222;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 4px solid #ccc;
+            overflow-x: auto;
+        }
+        code {
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>📘 Tutorial Completo: MER, UML, SQL e CRUD em Python</h1>
+
+    <h2>🔷 1. Comparação entre MER e UML</h2>
+    <p><strong>MER (Modelo Entidade-Relacionamento)</strong> foca na estrutura de dados para bancos relacionais, enquanto <strong>UML (Modelagem de Classes)</strong> representa objetos e seus comportamentos em sistemas orientados a objetos.</p>
+
+    <h3>Exemplo de Entidades e Classes:</h3>
+    <ul>
+        <li><strong>Mecânico</strong>: possui nome, telefone, especialidades e ordens de serviço.</li>
+        <li><strong>Especialidade</strong>: representa áreas de atuação dos mecânicos.</li>
+        <li><strong>OS (Ordem de Serviço)</strong>: tarefas atribuídas aos mecânicos.</li>
+    </ul>
+
+    <h2>🔷 2. Scripts SQL para MySQL</h2>
+    <pre><code>CREATE TABLE Especialidade (
+    id_especialidade INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Mecanico (
+    id_mecanico INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(20)
+);
+
+CREATE TABLE OS (
+    id_os INT AUTO_INCREMENT PRIMARY KEY,
+    data DATE NOT NULL,
+    descricao TEXT,
+    status VARCHAR(50),
+    id_mecanico INT,
+    FOREIGN KEY (id_mecanico) REFERENCES Mecanico(id_mecanico)
+);
+
+CREATE TABLE MecanicoEspecialidade (
+    id_mecanico INT,
+    id_especialidade INT,
+    PRIMARY KEY (id_mecanico, id_especialidade),
+    FOREIGN KEY (id_mecanico) REFERENCES Mecanico(id_mecanico),
+    FOREIGN KEY (id_especialidade) REFERENCES Especialidade(id_especialidade)
+);</code></pre>
+
+    <h2>🔷 3. CRUD Interativo em Python</h2>
+    <p>Este script permite ao usuário interagir via terminal para gerenciar Mecânicos, Especialidades e Ordens de Serviço.</p>
+
+    <pre><code>import mysql.connector
+
+class Database:
+    def __init__(self):
+        self.conn = mysql.connector.connect(
+            host="localhost",
+            user="seu_usuario",
+            password="sua_senha",
+            database="nome_do_banco"
+        )
+        self.cursor = self.conn.cursor()
+
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
+
+class Mecanico:
+    def __init__(self, db):
+        self.db = db
+
+    def criar(self):
+        nome = input("Nome do mecânico: ")
+        telefone = input("Telefone: ")
+        self.db.cursor.execute("INSERT INTO Mecanico (nome, telefone) VALUES (%s, %s)", (nome, telefone))
+        self.db.conn.commit()
+
+    def listar(self):
+        self.db.cursor.execute("SELECT * FROM Mecanico")
+        for row in self.db.cursor.fetchall():
+            print(row)
+
+class Especialidade:
+    def __init__(self, db):
+        self.db = db
+
+    def criar(self):
+        nome = input("Nome da especialidade: ")
+        self.db.cursor.execute("INSERT INTO Especialidade (nome) VALUES (%s)", (nome,))
+        self.db.conn.commit()
+
+    def listar(self):
+        self.db.cursor.execute("SELECT * FROM Especialidade")
+        for row in self.db.cursor.fetchall():
+            print(row)
+
+class OS:
+    def __init__(self, db):
+        self.db = db
+
+    def criar(self):
+        data = input("Data (YYYY-MM-DD): ")
+        descricao = input("Descrição: ")
+        status = input("Status: ")
+        id_mecanico = input("ID do mecânico: ")
+        self.db.cursor.execute(
+            "INSERT INTO OS (data, descricao, status, id_mecanico) VALUES (%s, %s, %s, %s)",
+            (data, descricao, status, id_mecanico)
+        )
+        self.db.conn.commit()
+
+    def listar(self):
+        self.db.cursor.execute("SELECT * FROM OS")
+        for row in self.db.cursor.fetchall():
+            print(row)
+
+class MecanicoEspecialidade:
+    def __init__(self, db):
+        self.db = db
+
+    def associar(self):
+        id_mecanico = input("ID do mecânico: ")
+        id_especialidade = input("ID da especialidade: ")
+        self.db.cursor.execute(
+            "INSERT INTO MecanicoEspecialidade (id_mecanico, id_especialidade) VALUES (%s, %s)",
+            (id_mecanico, id_especialidade)
+        )
+        self.db.conn.commit()
+
+    def listar(self):
+        self.db.cursor.execute("SELECT * FROM MecanicoEspecialidade")
+        for row in self.db.cursor.fetchall():
+            print(row)
+
+def menu():
+    db = Database()
+    mecanico = Mecanico(db)
+    especialidade = Especialidade(db)
+    os = OS(db)
+    me = MecanicoEspecialidade(db)
+
+    while True:
+        print("\n1. Criar Mecânico")
+        print("2. Listar Mecânicos")
+        print("3. Criar Especialidade")
+        print("4. Listar Especialidades")
+        print("5. Criar OS")
+        print("6. Listar OS")
+        print("7. Associar Mecânico a Especialidade")
+        print("8. Listar Associações")
+        print("0. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            mecanico.criar()
+        elif opcao == "2":
+            mecanico.listar()
+        elif opcao == "3":
+            especialidade.criar()
+        elif opcao == "4":
+            especialidade.listar()
+        elif opcao == "5":
+            os.criar()
+        elif opcao == "6":
+            os.listar()
+        elif opcao == "7":
+            me.associar()
+        elif opcao == "8":
+            me.listar()
+        elif opcao == "0":
+            break
+
+    db.close()
+
+if __name__ == "__main__":
+    menu()</code></pre>
+
+    <p>💡 <strong>Dica:</strong> Instale o conector MySQL com <code>pip install mysql-connector-python</code></p>
+
+</body>
+</html>

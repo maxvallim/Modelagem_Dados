@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutorial Comparativo: MER vs UML</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #eee;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tutorial Comparativo: Modelagem Entidade-Relacionamento (MER) vs Modelagem de Classes (UML)</h1>
+
+    <h2>1. Visão Geral</h2>
+    <table>
+        <tr>
+            <th>Aspecto</th>
+            <th>MER (Modelagem de Dados)</th>
+            <th>UML (Modelagem de Classes)</th>
+        </tr>
+        <tr>
+            <td>Foco</td>
+            <td>Estrutura de dados para banco relacional</td>
+            <td>Estrutura de objetos para sistemas orientados a objetos</td>
+        </tr>
+        <tr>
+            <td>Elementos principais</td>
+            <td>Entidades, atributos, relacionamentos</td>
+            <td>Classes, atributos, métodos, associações</td>
+        </tr>
+        <tr>
+            <td>Objetivo</td>
+            <td>Normalizar dados e garantir integridade</td>
+            <td>Representar comportamento e estrutura de objetos</td>
+        </tr>
+    </table>
+
+    <h2>2. Exemplo: Oficina com Mecânicos, Especialidades e Ordens de Serviço</h2>
+
+    <h3>MER (Modelo Entidade-Relacionamento)</h3>
+    <ul>
+        <li><strong>Entidades:</strong>
+            <ul>
+                <li><code>Mecânico</code> (id_mecanico, nome, telefone)</li>
+                <li><code>Especialidade</code> (id_especialidade, nome)</li>
+                <li><code>OS (Ordem de Serviço)</code> (id_os, data, descrição, status)</li>
+            </ul>
+        </li>
+        <li><strong>Relacionamentos:</strong>
+            <ul>
+                <li><code>Mecânico - Especialidade</code>: Muitos-para-muitos → entidade associativa <code>MecanicoEspecialidade</code></li>
+                <li><code>Mecânico - OS</code>: Um mecânico pode trabalhar em várias OS → relacionamento 1:N</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h3>UML (Modelagem de Classes)</h3>
+    <pre>
+class Mecanico {
+    id: int
+    nome: string
+    telefone: string
+    especialidades: List&lt;Especialidade&gt;
+    ordensDeServico: List&lt;OS&gt;
+}
+
+class Especialidade {
+    id: int
+    nome: string
+}
+
+class OS {
+    id: int
+    data: Date
+    descricao: string
+    status: string
+    mecanico: Mecanico
+}
+    </pre>
+
+    <h2>3. Comparação Direta</h2>
+    <table>
+        <tr>
+            <th>Conceito</th>
+            <th>MER</th>
+            <th>UML</th>
+        </tr>
+        <tr>
+            <td>Entidade</td>
+            <td>Representa uma tabela</td>
+            <td>Representa uma classe</td>
+        </tr>
+        <tr>
+            <td>Atributo</td>
+            <td>Coluna da tabela</td>
+            <td>Propriedade da classe</td>
+        </tr>
+        <tr>
+            <td>Relacionamento</td>
+            <td>Cardinalidade (1:N, N:N)</td>
+            <td>Associação (com multiplicidade)</td>
+        </tr>
+        <tr>
+            <td>Entidade associativa</td>
+            <td>Necessária para N:N</td>
+            <td>Pode ser representada como lista ou classe intermediária</td>
+        </tr>
+        <tr>
+            <td>Foco</td>
+            <td>Persistência de dados</td>
+            <td>Estrutura e comportamento de objetos</td>
+        </tr>
+    </table>
+
+    <h2>4. Dicas para Transição MER → UML</h2>
+    <ul>
+        <li>Entidades viram classes.</li>
+        <li>Relacionamentos viram associações.</li>
+        <li>Entidades associativas podem virar classes ou listas.</li>
+        <li>Atributos mantêm-se, mas métodos podem ser adicionados.</li>
+        <li>Cardinalidade do MER vira multiplicidade na UML.</li>
+    </ul>
+
+    <p>Esse tutorial oferece uma base sólida para entender como os modelos MER e UML se relacionam e como migrar de um para o outro. Se quiser expandir com métodos nas classes ou exemplos de código, posso ajudar!</p>
+</body>
+</html>
