@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutorial CRUD com Firebase e Python</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 4px solid #ccc;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tutorial: CRUD com Firebase e Python</h1>
+    <p>Este tutorial apresenta um sistema completo de gerenciamento de Especialidades, Mecânicos, Ordens de Serviço (OS) e relacionamentos entre Mecânicos e Especialidades utilizando Python e Firebase. O sistema possui um menu interativo com submenus para cada entidade e entrada de dados via <code>input()</code>.</p>
+
+    <h2>Pré-requisitos</h2>
+    <ul>
+        <li>Conta no Firebase</li>
+        <li>Projeto criado no Firebase</li>
+        <li>Firestore ativado no modo de teste</li>
+        <li>Arquivo de chave privada JSON do Firebase</li>
+        <li>Instalar o pacote <code>firebase-admin</code>:</li>
+    </ul>
+    <pre>pip install firebase-admin</pre>
+
+    <h2>Script Completo com Submenus</h2>
+    <pre><code>import firebase_admin
+from firebase_admin import credentials, firestore
+
+# Inicialização do Firebase
+cred = credentials.Certificate('caminho/para/seu/arquivo-chave.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Funções CRUD para Especialidade
+def criar_especialidade():
+    nome = input("Digite o nome da especialidade: ")
+    doc_ref = db.collection('Especialidade').document()
+    doc_ref.set({'nome': nome})
+    print("Especialidade criada com sucesso.")
+
+def listar_especialidades():
+    especialidades = db.collection('Especialidade').stream()
+    for esp in especialidades:
+        print(f"{esp.id} - {esp.to_dict()['nome']}")
+
+def atualizar_especialidade():
+    listar_especialidades()
+    id_esp = input("Digite o ID da especialidade que deseja atualizar: ")
+    novo_nome = input("Digite o novo nome: ")
+    db.collection('Especialidade').document(id_esp).update({'nome': novo_nome})
+    print("Especialidade atualizada.")
+
+def excluir_especialidade():
+    listar_especialidades()
+    id_esp = input("Digite o ID da especialidade que deseja excluir: ")
+    db.collection('Especialidade').document(id_esp).delete()
+    print("Especialidade excluída.")
+
+# Funções CRUD para Mecânico
+def criar_mecanico():
+    nome = input("Digite o nome do mecânico: ")
+    telefone = input("Digite o telefone: ")
+    doc_ref = db.collection('Mecanico').document()
+    doc_ref.set({'nome': nome, 'telefone': telefone})
+    print("Mecânico criado com sucesso.")
+
+def listar_mecanicos():
+    mecanicos = db.collection('Mecanico').stream()
+    for mec in mecanicos:
+        dados = mec.to_dict()
+        print(f"{mec.id} - {dados['nome']} ({dados['telefone']})")
+
+def atualizar_mecanico():
+    listar_mecanicos()
+    id_mec = input("Digite o ID do mecânico que deseja atualizar: ")
+    nome = input("Novo nome: ")
+    telefone = input("Novo telefone: ")
+    db.collection('Mecanico').document(id_mec).update({'nome': nome, 'telefone': telefone})
+    print("Mecânico atualizado.")
+
+def excluir_mecanico():
+    listar_mecanicos()
+    id_mec = input("Digite o ID do mecânico que deseja excluir: ")
+    db.collection('Mecanico').document(id_mec).delete()
+    print("Mecânico excluído.")
+
+# Funções CRUD para Ordem de Serviço (OS)
+def criar_os():
+    data = input("Digite a data (YYYY-MM-DD): ")
+    descricao = input("Digite a descrição: ")
+    status = input("Digite o status: ")
+    listar_mecanicos()
+    id_mec = input("Digite o ID do mecânico responsável: ")
+    doc_ref = db.collection('OS').document()
+    doc_ref.set({'data': data, 'descricao': descricao, 'status': status, 'id_mecanico': id_mec})
+    print("OS criada com sucesso.")
+
+def listar_os():
+    os_list = db.collection('OS').stream()
+    for os in os_list:
+        dados = os.to_dict()
+        print(f"{os.id} - {dados['data']} | {dados['descricao']} | {dados['status']} | Mecânico: {dados['id_mecanico']}")
+
+def atualizar_os():
+    listar_os()
+    id_os = input("Digite o ID da OS que deseja atualizar: ")
+    data = input("Nova data (YYYY-MM-DD): ")
+    descricao = input("Nova descrição: ")
+    status = input("Novo status: ")
+    listar_mecanicos()
+    id_mec = input("Novo ID do mecânico: ")
+    db.collection('OS').document(id_os).update({
+        'data': data,
+        'descricao': descricao,
+        'status': status,
+        'id_mecanico': id_mec
+    })
+    print("OS atualizada.")
+
+def excluir_os():
+    listar_os()
+    id_os = input("Digite o ID da OS que deseja excluir: ")
+    db.collection('OS').document(id_os).delete()
+    print("OS excluída.")
+
+# Funções para MecanicoEspecialidade
+def criar_mecanico_especialidade():
+    listar_mecanicos()
+    id_mec = input("Digite o ID do mecânico: ")
+    listar_especialidades()
+    id_esp = input("Digite o ID da especialidade: ")
+    doc_id = f"{id_mec}_{id_esp}"
+    db.collection('MecanicoEspecialidade').document(doc_id).set({
+        'id_mecanico': id_mec,
+        'id_especialidade': id_esp
+    })
+    print("Relação criada com sucesso.")
+
+def listar_mecanico_especialidade():
+    relacoes = db.collection('MecanicoEspecialidade').stream()
+    for rel in relacoes:
+        dados = rel.to_dict()
+        print(f"{rel.id} - Mecânico: {dados['id_mecanico']} | Especialidade: {dados['id_especialidade']}")
+
+def excluir_mecanico_especialidade():
+    listar_mecanico_especialidade()
+    doc_id = input("Digite o ID da relação (formato: id_mecanico_id_especialidade): ")
+    db.collection('MecanicoEspecialidade').document(doc_id).delete()
+    print("Relação excluída.")
+
+# Menu principal com submenus
+def menu():
+    while True:
+        print("\n--- MENU PRINCIPAL ---")
+        print("1. Especialidades")
+        print("2. Mecânicos")
+        print("3. Ordens de Serviço")
+        print("4. Relações Mecânico-Especialidade")
+        print("0. Sair")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == '1':
+            submenu_especialidade()
+        elif opcao == '2':
+            submenu_mecanico()
+        elif opcao == '3':
+            submenu_os()
+        elif opcao == '4':
+            submenu_mecanico_especialidade()
+        elif opcao == '0':
+            break
+        else:
+            print("Opção inválida.")
+
+def submenu_especialidade():
+    while True:
+        print("\n--- Especialidades ---")
+        print("1. Criar")
+        print("2. Listar")
+        print("3. Atualizar")
+        print("4. Excluir")
+        print("0. Voltar")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == '1':
+            criar_especialidade()
+        elif opcao == '2':
+            listar_especialidades()
+        elif opcao == '3':
+            atualizar_especialidade()
+        elif opcao == '4':
+            excluir_especialidade()
+        elif opcao == '0':
+            break
+        else:
+            print("Opção inválida.")
+
+def submenu_mecanico():
+    while True:
+        print("\n--- Mecânicos ---")
+        print("1. Criar")
+        print("2. Listar")
+        print("3. Atualizar")
+        print("4. Excluir")
+        print("0. Voltar")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == '1':
+            criar_mecanico()
+        elif opcao == '2':
+            listar_mecanicos()
+        elif opcao == '3':
+            atualizar_mecanico()
+        elif opcao == '4':
+            excluir_mecanico()
+        elif opcao == '0':
+            break
+        else:
+            print("Opção inválida.")
+
+def submenu_os():
+    while True:
+        print("\n--- Ordens de Serviço ---")
+        print("1. Criar")
+        print("2. Listar")
+        print("3. Atualizar")
+        print("4. Excluir")
+        print("0. Voltar")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == '1':
+            criar_os()
+        elif opcao == '2':
+            listar_os()
+        elif opcao == '3':
+            atualizar_os()
+        elif opcao == '4':
+            excluir_os()
+        elif opcao == '0':
+            break
+        else:
+            print("Opção inválida.")
+
+def submenu_mecanico_especialidade():
+    while True:
+        print("\n--- Relações Mecânico-Especialidade ---")
+        print("1. Criar relação")
+        print("2. Listar relações")
+        print("3. Excluir relação")
+        print("0. Voltar")
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == '1':
+            criar_mecanico_especialidade()
+        elif opcao == '2':
+            listar_mecanico_especialidade()
+        elif opcao == '3':
+            excluir_mecanico_especialidade()
+        elif opcao == '0':
+            break
+        else:
+            print("Opção inválida.")
+
+# Executar o menu
+menu()
+</code></pre>
+
+    <h2>Conclusão</h2>
+    <p>Este tutorial fornece uma base sólida para implementar um sistema de gerenciamento de ordens de serviço com Firebase e Python. Você pode expandir o projeto adicionando autenticação, validações, interface gráfica ou integração com outras APIs.</p>
+</body>
+</html>

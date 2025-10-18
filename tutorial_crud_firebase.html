@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutorial: CRUD com Python e Firebase</title>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 40px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tutorial: CRUD com Python e Firebase</h1>
+
+    <div class="section">
+        <h2>1. Introdução</h2>
+        <p>Este tutorial ensina como criar um sistema CRUD (Create, Read, Update, Delete) em Python utilizando o Firebase como banco de dados. O exemplo será baseado em uma oficina mecânica, com tabelas para mecânicos, especialidades e ordens de serviço.</p>
+    </div>
+
+    <div class="section">
+        <h2>2. Configuração do Firebase</h2>
+        <ol>
+            <li>Acesse o <a href="https://console.firebase.google.com/" target="_blank">Firebase Console</a> e crie um novo projeto.</li>
+            <li>Vá em <strong>Configurações do projeto &gt; Contas de serviço</strong>.</li>
+            <li>Clique em <strong>Gerar nova chave privada</strong> e baixe o arquivo JSON.</li>
+            <li>Salve esse arquivo no diretório do seu projeto Python.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>3. Instalação das dependências</h2>
+        <p>Instale o SDK do Firebase Admin com o seguinte comando:</p>
+        <pre><code>pip install firebase-admin</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>4. Inicialização do Firebase no Python</h2>
+        <pre><code>import firebase_admin
+from firebase_admin import credentials, firestore
+
+cred = credentials.Certificate('caminho/para/seu/arquivo-chave.json')
+firebase_admin.initialize_app(cred)
+db = firestore.client()</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>5. Estrutura das coleções</h2>
+        <ul>
+            <li><strong>Especialidade</strong>: id_especialidade, nome</li>
+            <li><strong>Mecanico</strong>: id_mecanico, nome, telefone</li>
+            <li><strong>OS</strong>: id_os, data, descricao, status, id_mecanico</li>
+            <li><strong>MecanicoEspecialidade</strong>: id_mecanico, id_especialidade</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>6. Funções CRUD</h2>
+
+        <h3>6.1 Criar Especialidade</h3>
+        <pre><code>def criar_especialidade(nome):
+    doc_ref = db.collection('Especialidade').document()
+    doc_ref.set({'nome': nome})</code></pre>
+
+        <h3>6.2 Listar Especialidades</h3>
+        <pre><code>def listar_especialidades():
+    docs = db.collection('Especialidade').stream()
+    for doc in docs:
+        print(doc.id, doc.to_dict())</code></pre>
+
+        <h3>6.3 Atualizar Especialidade</h3>
+        <pre><code>def atualizar_especialidade(id, novo_nome):
+    db.collection('Especialidade').document(id).update({'nome': novo_nome})</code></pre>
+
+        <h3>6.4 Excluir Especialidade</h3>
+        <pre><code>def excluir_especialidade(id):
+    db.collection('Especialidade').document(id).delete()</code></pre>
+
+        <p>As demais entidades seguem a mesma lógica: <code>Mecanico</code>, <code>OS</code> e <code>MecanicoEspecialidade</code>.</p>
+    </div>
+
+    <div class="section">
+        <h2>7. Exemplos de uso</h2>
+        <pre><code># Criar uma especialidade
+criar_especialidade("Suspensão")
+
+# Listar todas as especialidades
+listar_especialidades()
+
+# Atualizar uma especialidade
+atualizar_especialidade("id_do_documento", "Freios")
+
+# Excluir uma especialidade
+excluir_especialidade("id_do_documento")</code></pre>
+    </div>
+
+    <div class="section">
+        <h2>8. Conclusão</h2>
+        <p>Com esse tutorial, você aprendeu a configurar o Firebase e implementar um CRUD completo em Python para gerenciar dados de uma oficina mecânica. Esse modelo pode ser expandido para incluir autenticação, interface gráfica e muito mais.</p>
+    </div>
+</body>
+</html>
