@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial SQL para Modelagem de Dados - MySQL</title>
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background:#ffffff;
+    color:#000000;
+    margin:0;
+    padding:0;
+    line-height:1.7;
+}
+
+header{
+    background:#f5f5f5;
+    border-bottom:4px solid #000;
+    padding:40px;
+    text-align:center;
+}
+
+header h1{
+    margin:0;
+    font-size:36px;
+}
+
+header p{
+    margin-top:10px;
+    font-size:18px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:30px;
+}
+
+.section{
+    margin-bottom:45px;
+    padding:25px;
+    border:1px solid #dcdcdc;
+    border-radius:8px;
+    background:#fafafa;
+}
+
+h2{
+    border-bottom:2px solid #000;
+    padding-bottom:8px;
+}
+
+h3{
+    margin-top:25px;
+}
+
+.code{
+    background:#272822;
+    color:#f8f8f2;
+    padding:15px;
+    border-radius:8px;
+    overflow-x:auto;
+    margin-top:10px;
+    margin-bottom:15px;
+}
+
+.code pre{
+    margin:0;
+}
+
+.resultado{
+    background:#ffffff;
+    border-left:5px solid #000;
+    padding:12px;
+    margin-top:10px;
+}
+
+ul li{
+    margin-bottom:8px;
+}
+
+.footer{
+    text-align:center;
+    padding:30px;
+    border-top:2px solid #000;
+    margin-top:40px;
+    font-size:14px;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+    <h1>SQL para Consultas e Manipulação de Dados</h1>
+    <p>Guia Prático para Atividades de Modelagem de Dados utilizando MySQL</p>
+</header>
+
+<div class="container">
+
+<div class="section">
+<h2>Introdução</h2>
+
+<p>
+Após a criação das tabelas no banco de dados, o próximo passo consiste em trabalhar
+com os dados armazenados. Para isso utilizamos a linguagem SQL (Structured Query Language).
+</p>
+
+<p>Este tutorial apresenta os principais comandos utilizados para:</p>
+
+<ul>
+<li>Inserir dados;</li>
+<li>Consultar informações;</li>
+<li>Atualizar registros;</li>
+<li>Excluir registros;</li>
+<li>Aplicar filtros e pesquisas;</li>
+<li>Criar relatórios e estatísticas;</li>
+<li>Relacionar informações entre tabelas.</li>
+</ul>
+
+</div>
+
+<div class="section">
+<h2>1. INSERT INTO</h2>
+
+<p><strong>O que é?</strong></p>
+<p>
+O comando INSERT INTO é utilizado para inserir novos registros em uma tabela.
+</p>
+
+<p><strong>Quando utilizar?</strong></p>
+<p>
+Sempre que houver necessidade de cadastrar novas informações no sistema.
+</p>
+
+<h3>Exemplo</h3>
+
+<div class="code">
+<pre>
+INSERT INTO clientes
+(nome, cidade)
+VALUES
+('João Silva', 'São Paulo');
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Um novo cliente será inserido na tabela.
+</div>
+
+<h3>Inserindo vários registros</h3>
+
+<div class="code">
+<pre>
+INSERT INTO clientes
+(nome, cidade)
+VALUES
+('Maria Souza', 'Campinas'),
+('Pedro Santos', 'Aguaí'),
+('Ana Lima', 'Poços de Caldas');
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Três novos clientes serão cadastrados em uma única operação.
+</div>
+
+</div>
+
+<div class="section">
+<h2>2. SELECT</h2>
+
+<p><strong>O que é?</strong></p>
+<p>
+O comando SELECT é utilizado para consultar informações armazenadas no banco.
+</p>
+
+<h3>Consultando todos os campos</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Todos os registros e colunas da tabela clientes.
+</div>
+
+<h3>Consultando campos específicos</h3>
+
+<div class="code">
+<pre>
+SELECT nome, cidade
+FROM clientes;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Apenas os campos nome e cidade serão exibidos.
+</div>
+
+</div>
+
+<div class="section">
+<h2>3. WHERE</h2>
+
+<p><strong>O que é?</strong></p>
+<p>
+A cláusula WHERE permite filtrar os registros retornados pela consulta.
+</p>
+
+<h3>Filtro de igualdade</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE cidade = 'Aguaí';
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Apenas clientes da cidade de Aguaí.
+</div>
+
+<h3>Filtro de diferença</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE cidade <> 'Aguaí';
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Clientes de todas as cidades, exceto Aguaí.
+</div>
+
+<h3>Valor maior que</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM produtos
+WHERE preco > 100;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Produtos com preço superior a R$ 100,00.
+</div>
+
+<h3>Valor menor que</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM produtos
+WHERE preco < 100;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Produtos com preço inferior a R$ 100,00.
+</div>
+
+</div>
+
+<div class="section">
+<h2>4. LIKE</h2>
+
+<p><strong>O que é?</strong></p>
+
+<p>
+LIKE é utilizado para pesquisas parciais em campos textuais.
+</p>
+
+<h3>Nomes iniciados pela letra A</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE nome LIKE 'A%';
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Ana, Amanda, André...
+</div>
+
+<h3>Nomes terminados por Silva</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE nome LIKE '%Silva';
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: João Silva, Carlos Silva...
+</div>
+
+<h3>Nomes contendo Souza</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE nome LIKE '%Souza%';
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Maria Souza, José Souza Lima...
+</div>
+
+</div>
+
+<div class="section">
+<h2>5. BETWEEN</h2>
+
+<p>
+Utilizado para pesquisar dados dentro de um intervalo de valores.
+</p>
+
+<div class="code">
+<pre>
+SELECT *
+FROM produtos
+WHERE preco BETWEEN 100 AND 500;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Produtos com preços entre R$ 100,00 e R$ 500,00.
+</div>
+
+</div>
+
+<div class="section">
+<h2>6. IN</h2>
+
+<p>
+Permite pesquisar diversos valores simultaneamente.
+</p>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE cidade IN
+('Aguaí','Campinas','São Paulo');
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Clientes localizados em qualquer uma das cidades informadas.
+</div>
+
+</div>
+
+<div class="section">
+<h2>7. AND e OR</h2>
+
+<h3>AND</h3>
+
+<p>
+Retorna os registros que atendem todas as condições.
+</p>
+
+<div class="code">
+<pre>
+SELECT *
+FROM produtos
+WHERE preco > 100
+AND estoque > 0;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Produtos acima de R$ 100,00 e disponíveis em estoque.
+</div>
+
+<h3>OR</h3>
+
+<p>
+Retorna os registros que atendem pelo menos uma das condições.
+</p>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+WHERE cidade = 'Aguaí'
+OR cidade = 'São João da Boa Vista';
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Clientes de Aguaí ou São João da Boa Vista.
+</div>
+
+</div>
+
+<div class="section">
+<h2>8. ORDER BY</h2>
+
+<p>
+Responsável por ordenar os resultados retornados pela consulta.
+</p>
+
+<h3>Ordem crescente</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM clientes
+ORDER BY nome;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Registros ordenados de A até Z.
+</div>
+
+<h3>Ordem decrescente</h3>
+
+<div class="code">
+<pre>
+SELECT *
+FROM produtos
+ORDER BY preco DESC;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Registros do maior valor para o menor.
+</div>
+
+</div>
+
+<div class="section">
+<h2>9. UPDATE</h2>
+
+<p>
+Utilizado para alterar registros já existentes.
+</p>
+
+<div class="code">
+<pre>
+UPDATE clientes
+SET cidade = 'Campinas'
+WHERE id = 1;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: A cidade do cliente com ID 1 será atualizada.
+</div>
+
+<h3>Atualizando vários campos</h3>
+
+<div class="code">
+<pre>
+UPDATE produtos
+SET
+preco = 250,
+estoque = 100
+WHERE id = 5;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Preço e estoque serão alterados simultaneamente.
+</div>
+
+</div>
+
+<div class="section">
+<h2>10. DELETE</h2>
+
+<p>
+Utilizado para remover registros.
+</p>
+
+<div class="code">
+<pre>
+DELETE FROM clientes
+WHERE id = 10;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: O cliente com ID 10 será removido.
+</div>
+
+</div>
+
+<div class="section">
+<h2>11. COUNT()</h2>
+
+<p>
+Conta a quantidade de registros existentes.
+</p>
+
+<div class="code">
+<pre>
+SELECT COUNT(*) AS total
+FROM clientes;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Total de clientes cadastrados.
+</div>
+
+</div>
+
+<div class="section">
+<h2>12. SUM()</h2>
+
+<p>
+Realiza a soma de valores numéricos.
+</p>
+
+<div class="code">
+<pre>
+SELECT SUM(valor)
+FROM vendas;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Valor total vendido.
+</div>
+
+</div>
+
+<div class="section">
+<h2>13. AVG()</h2>
+
+<p>
+Calcula a média de valores.
+</p>
+
+<div class="code">
+<pre>
+SELECT AVG(valor)
+FROM vendas;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Média das vendas realizadas.
+</div>
+
+</div>
+
+<div class="section">
+<h2>14. MAX() e MIN()</h2>
+
+<h3>Maior valor</h3>
+
+<div class="code">
+<pre>
+SELECT MAX(valor)
+FROM vendas;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Maior valor registrado.
+</div>
+
+<h3>Menor valor</h3>
+
+<div class="code">
+<pre>
+SELECT MIN(valor)
+FROM vendas;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Menor valor registrado.
+</div>
+
+</div>
+
+<div class="section">
+<h2>15. GROUP BY</h2>
+
+<p>
+Permite agrupar registros para produzir relatórios estatísticos.
+</p>
+
+<div class="code">
+<pre>
+SELECT
+cidade,
+COUNT(*) AS quantidade
+FROM clientes
+GROUP BY cidade;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Quantidade de clientes por cidade.
+</div>
+
+</div>
+
+<div class="section">
+<h2>16. INNER JOIN</h2>
+
+<p>
+Relaciona informações que estão armazenadas em tabelas diferentes.
+</p>
+
+<div class="code">
+<pre>
+SELECT
+c.nome,
+p.id AS pedido
+FROM clientes c
+INNER JOIN pedidos p
+ON c.id = p.cliente_id;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Exibe os clientes juntamente com seus respectivos pedidos.
+</div>
+
+</div>
+
+<div class="section">
+<h2>17. JOIN com Três Tabelas</h2>
+
+<p>
+Também é possível relacionar mais de duas tabelas em uma mesma consulta.
+</p>
+
+<div class="code">
+<pre>
+SELECT
+c.nome,
+p.id,
+pr.descricao
+FROM pedidos p
+INNER JOIN clientes c
+ON c.id = p.cliente_id
+INNER JOIN produtos pr
+ON pr.id = p.produto_id;
+</pre>
+</div>
+
+<div class="resultado">
+Resultado: Exibe cliente, pedido e produto em uma única consulta.
+</div>
+
+</div>
+
+<div class="section">
+<h2>Exercícios para Praticar</h2>
+
+<ol>
+<li>Liste todos os registros da entidade principal.</li>
+<li>Faça uma consulta utilizando WHERE.</li>
+<li>Utilize LIKE para pesquisar textos.</li>
+<li>Ordene registros com ORDER BY.</li>
+<li>Conte registros utilizando COUNT().</li>
+<li>Some valores utilizando SUM().</li>
+<li>Calcule médias utilizando AVG().</li>
+<li>Utilize GROUP BY para gerar estatísticas.</li>
+<li>Crie pelo menos um INNER JOIN.</li>
+<li>Atualize um registro com UPDATE.</li>
+<li>Exclua um registro utilizando DELETE.</li>
+</ol>
+
+<p>
+<strong>Objetivo:</strong> Ao concluir estes exercícios, o aluno terá utilizado os principais comandos necessários para manipular dados e construir consultas em bancos de dados relacionais utilizando MySQL.
+</p>
+
+</div>
+
+</div>
+
+<div class="footer">
+Tutorial SQL para Modelagem de Dados • MySQL
+</div>
+
+</body>
+</html>
